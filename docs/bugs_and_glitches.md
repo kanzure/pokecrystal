@@ -2440,6 +2440,8 @@ CopyPokemonName_Buffer1_Buffer3:
 
 ### Magikarp lengths can be miscalculated
 
+`CalcMagikarpLength.BCLessThanDE` only compares the high bytes of `bc` and `de`. This causes the first entry of the `MagikarpLengths` table to go unused, and `bc` values between 65,280 and 65,509 to use the wrong formula. As a side effect, the highest possible length is capped at 1,625mm (before being converted to feet and inches).
+
 **Fix:** Edit `CalcMagikarpLength.BCLessThanDE` in [engine/events/magikarp.asm](https://github.com/pret/pokecrystal/blob/master/engine/events/magikarp.asm):
 
 ```diff
@@ -2447,8 +2449,9 @@ CopyPokemonName_Buffer1_Buffer3:
 -; BUG: Magikarp lengths can be miscalculated (see docs/bugs_and_glitches.md)
  	ld a, b
  	cp d
- 	ret c
+-	ret c
 -	ret nc
++	ret nz
  	ld a, c
  	cp e
  	ret

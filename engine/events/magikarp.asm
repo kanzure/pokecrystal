@@ -108,35 +108,17 @@ CalcMagikarpLength:
 ;   de: wEnemyMonDVs
 ;   bc: wPlayerID
 
-; This function is poorly commented.
-
-; In short, it generates a value between 190 and 1786 using
-; a Magikarp's DVs and its trainer ID. This value is further
-; filtered in LoadEnemyMon to make longer Magikarp even rarer.
+; It generates a value between 190 and 1755 using a Magikarp's DVs
+; and its trainer ID. This value is further filtered in LoadEnemyMon
+; to make longer Magikarp even rarer.
 
 ; The value is generated from a lookup table.
-; The index is determined by the dv xored with the player's trainer id.
+; The index is determined by the DV xored with the player's trainer ID
+; and then stored in bc.
 
-; bc = rrc(dv[0]) ++ rrc(dv[1]) ^ rrc(id)
-
-; if bc < 10:    [wMagikarpLength] = c + 190
-; if bc ≥ $ff00: [wMagikarpLength] = c + 1370
+; if bc < 10:    [wMagikarpLength] = bc + 190
+; if bc ≥ 65510: [wMagikarpLength] = bc - 65510 + 1600
 ; else:          [wMagikarpLength] = z * 100 + (bc - x) / y
-
-; X, Y, and Z depend on the value of b as follows:
-
-; if b = 0:        x =   310,  y =   2,  z =  3
-; if b = 1:        x =   710,  y =   4,  z =  4
-; if b = 2-9:      x =  2710,  y =  20,  z =  5
-; if b = 10-29:    x =  7710,  y =  50,  z =  6
-; if b = 30-68:    x = 17710,  y = 100,  z =  7
-; if b = 69-126:   x = 32710,  y = 150,  z =  8
-; if b = 127-185:  x = 47710,  y = 150,  z =  9
-; if b = 186-224:  x = 57710,  y = 100,  z = 10
-; if b = 225-243:  x = 62710,  y =  50,  z = 11
-; if b = 244-251:  x = 64710,  y =  20,  z = 12
-; if b = 252-253:  x = 65210,  y =   5,  z = 13
-; if b = 254:      x = 65410,  y =   2,  z = 14
 
 	; bc = rrc(dv[0]) ++ rrc(dv[1]) ^ rrc(id)
 
